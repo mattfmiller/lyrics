@@ -1,3 +1,5 @@
+import { AnalyzeLyrics } from "./analyzelyrics.js";
+
 class Lyrics {
 
   apiCall(artist, song, displayData, displayError) {
@@ -19,7 +21,9 @@ class Lyrics {
 
     promise.then(function(response) {
       let result = JSON.parse(response);
-      displayData(artist, song, result);
+      let analyze = new AnalyzeLyrics(result.lyrics);
+      analyze.wordCount();
+      displayData(artist, song, result, analyze);
     }, function() {
       displayError();
     });

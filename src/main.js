@@ -1,13 +1,16 @@
-import { Lyrics } from './class.js';
+import { Lyrics } from './lyrics.js';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
 import $ from 'jquery';
 
-let displayData = function(inputArtist, inputSong, response) {
+let displayData = function(inputArtist, inputSong, response, analyze) {
   $("#lyrics").empty()&&$("#errors").empty();
   $("#lyrics").append(`${inputArtist} - ${inputSong}<br>`);
-  $("#lyrics").append(response.lyrics)
+  $("#lyrics").append("Lyrics: " + response.lyrics + "<br>");
+  $("#lyrics").append("Word Count: " + analyze.wordArray.length);
+  $("#lyrics").append(analyze.wordCountSet);
+  console.log(analyze.wordCountSet);
 }
 
 let displayError = function() {
@@ -20,7 +23,6 @@ $(document).ready(function() {
     let lyrics = new Lyrics();
     let inputArtist = $("#artist").val();
     let inputSong = $("#song").val();
-    console.log(inputArtist + " " + inputSong);
     lyrics.apiCall(inputArtist, inputSong, displayData, displayError);
   });
 });
