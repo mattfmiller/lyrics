@@ -15,7 +15,7 @@ let displayData = function(inputArtist, inputSong, displayLyrics, analyze) {
 
 let displayError = function(error) {
   clearSearch();
-  $("#errors").text(`There was an error processing your request: ${error} No lyrics found. Please try again.`)
+  $("#errors").text(`${error}<br>There was an error processing your request: Please try again.`)
 }
 
 let clearSearch = function() {
