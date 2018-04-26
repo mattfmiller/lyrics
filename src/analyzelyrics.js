@@ -1,43 +1,26 @@
 class AnalyzeLyrics {
 
+  // Takes lyric API call results, Regex replaces returns in JSON object with a single space, Regex removes non alphanumeric and space characters, splits this result into an array of words
   constructor(apiResponse) {
     this.apiResponse = apiResponse.toString().toLowerCase().replace(/[\r|\n|\r\n|\r\n\n]/g, " ").replace(/[^a-z0-9 ]/g, "").replace(/ +/g, " ");
-    console.log(this.apiResponse);
     this.wordArray = this.apiResponse.split(" ");
     this.wordFrequency = [];
+    this.totalWordCount = this.wordArray.slice().length;
   }
 
-
+  // First for loop creates Regex search for a given word, runs a Regex match of this word on the array, counts and pushes word into a new array, removes all but first instance of the word from the original array starting from the last position
   wordCount() {
-    console.log(this.wordArray);
     for (var i = 0; i < this.wordArray.length; i++) {
-      // debugger;
       let regEx = new RegExp(this.wordArray[i] +"\\b", "gi");
-      // console.log(regEx);
       let words = this.apiResponse.match(regEx);
-      // console.log(words);
       let count = words.length;
       this.wordFrequency.push([count, this.wordArray[i]]);
-      console.log(this.wordFrequency);
-      console.log(this.wordArray);
-      console.log(count);
       for (var j = this.wordArray.length ; j > i ; j--) {
         if (this.wordArray[j] === this.wordArray[i]) {
-          // debugger;
-          console.log([j]);
-          // console.log(this.wordArray[i]);
           this.wordArray.splice([j], 1)
         }
       }
     }
-
-  //   this.wordArray.forEach((element) => {
-  //     let regEx = new RegExp(" " + element + " ", "gi");
-  //     let words = this.apiResponse.match(regEx);
-  //     let count = words.length
-  //     this.wordCountSet.add([count, element]);
-  //   });
-  //   console.log(this.wordFrequency);
   }
 
 }

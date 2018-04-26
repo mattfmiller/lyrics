@@ -1,6 +1,8 @@
-class Lyrics {
+import $ from 'jQuery';
 
-  apiCall(artist, song) {
+class APICalls {
+
+  lyricsApiCall(artist, song) {
     let promise = new Promise(function(resolve, reject) {
       let request = new XMLHttpRequest();
       let url =`https://api.lyrics.ovh/v1/${artist}/${song}`;
@@ -16,6 +18,10 @@ class Lyrics {
     });
     return promise;
   }
+
+  artistApiCall(artist) {
+    return $.get(`http://www.theaudiodb.com/api/v1/json/1/search.php?s=${artist}`)
+  }
 }
 
-export { Lyrics };
+export { APICalls };

@@ -1,3 +1,16 @@
 .form-group {
   margin-top: 30px;
 }
+
+body {
+  background: lightgray;
+}
+
+img {
+  width: 100%;
+}
+
+.blockquote {
+  font-size: 16px;
+  font-style: italic;
+}
