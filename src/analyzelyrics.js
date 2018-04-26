@@ -21,6 +21,19 @@ class AnalyzeLyrics {
         }
       }
     }
+
+    //wordCountSort is a comparison function that gets passed to .sort() as an argument. This will compare count values for each [count, word] element in wordFrequency.
+    function wordCountSort(a, b) {
+      if (a[0] < b[0]) {
+        return -1;
+      } else if (a[0] > b[0]) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+
+    this.wordFrequency.sort(wordCountSort).reverse();
   }
 
 }

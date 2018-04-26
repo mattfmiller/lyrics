@@ -1,4 +1,4 @@
-import { APICalls } from './apiCall.js';
+import { APICalls } from './apicall.js';
 import { AnalyzeLyrics } from './analyzelyrics.js';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -10,8 +10,9 @@ let displayData = function(inputSong, displayLyrics, analyze) {
   $("#lyrics").append(`<h2>${inputSong}</h2>`);
   $("#lyrics").append("<h4>Lyrics:</h4><p>" + displayLyrics + "</p>");
   $("#analysis").append("Word Count: " + analyze.totalWordCount);
+  $("#analysis").append("<br>Unique Word Count: " + analyze.wordFrequency.length);
   analyze.wordFrequency.forEach(function(element){
-    $("#analysis").append("<br>" + element);
+    $("#analysis").append("<br>" + element[1] + ": " + element[0]);
   });
 }
 
@@ -20,18 +21,18 @@ let displayArtist = function(response) {
   $("#artistInfo").empty();
   $("#artistPic").append(`<img src="${response.artists[0].strArtistThumb}">`);
   $("#artistPic").append(`<h1>${response.artists[0].strArtist}</h1>`)
-  $("#artistPic").append(`<h2>Genre: ${response.artists[0].strGenre}</h2>`);
-  $("#artistPic").append(`<h2>Year Formed: ${response.artists[0].intFormedYear}</h2>`);
-  $("#artistInfo").append(`<blockquote class="blockquote"><h5>Biography:</h5><br> ${response.artists[0].strBiographyEN}</blockquote>`);
+  $("#artistPic").append(`<h3>Genre: ${response.artists[0].strGenre}</h3>`);
+  $("#artistPic").append(`<h4>Year Formed: ${response.artists[0].intFormedYear}</h4>`);
+  $("#artistInfo").append(`<blockquote class="blockquote"> ${response.artists[0].strBiographyEN}</blockquote>`);
 }
 
-let displayErrorArtist = function(error) {
+let displayErrorArtist = function() {
   $("#artistPic").empty();
   $("#artistInfo").empty();
   $("#errors").text(`There was an error processing your Artist request: Please try again.`)
 }
 
-let displayErrorLyrics = function(error) {
+let displayErrorLyrics = function() {
   clearSearch();
   $("#errors").text(`There was an error processing your lyrics request: Please try again.`)
 }
@@ -61,8 +62,6 @@ $(document).ready(function() {
 
     //artist jQuery "promise"
     search.artistApiCall(inputArtist).then(function(response) {
-      console.log(response);
-      console.log(response.artists[0].strArtistThumb);
       displayArtist(response);
     }).fail(function(){
       displayErrorArtist();
