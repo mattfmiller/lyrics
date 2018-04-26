@@ -10,7 +10,9 @@ let displayData = function(inputArtist, inputSong, displayLyrics, analyze) {
   $("#lyrics").append(`<h2>${inputArtist} - ${inputSong}</h2>`);
   $("#lyrics").append("<h4>Lyrics:</h4><p>" + displayLyrics + "</p>");
   $("#analysis").append("Word Count: " + analyze.wordArray.length);
-  $("#analysis").append(analyze.wordCountSet);
+  analyze.wordFrequency.forEach(function(element){
+    $("#analysis").append("<br>" + element);
+  });
 }
 
 let displayError = function(error) {
@@ -31,7 +33,7 @@ $(document).ready(function() {
     let inputSong = $("#song").val().toUpperCase();
     lyricsSearch.apiCall(inputArtist, inputSong).then(function(response) {
       let result = JSON.parse(response);
-      let displayLyrics = result.lyrics.toString().replace(/\r\n|\n|\r/g, '<br>');
+      let displayLyrics = result.lyrics.toString().replace(/\n\n|\r\n|\n|\r/g, '<br>');
       let analyze = new AnalyzeLyrics(result.lyrics);
       analyze.wordCount();
       displayData(inputArtist, inputSong, displayLyrics, analyze);
