@@ -1,28 +1,42 @@
 import { Lyrics } from './lyrics.js';
+import { AnalyzeLyrics } from './analyzelyrics.js';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles.css';
 import $ from 'jquery';
 
-let displayData = function(inputArtist, inputSong, response, analyze) {
-  $("#lyrics").empty()&&$("#errors").empty();
-  $("#lyrics").append(`${inputArtist} - ${inputSong}<br>`);
-  $("#lyrics").append("Lyrics: " + response.lyrics + "<br>");
-  $("#lyrics").append("Word Count: " + analyze.wordArray.length);
-  $("#lyrics").append(analyze.wordCountSet);
-  console.log(analyze.wordCountSet);
+let displayData = function(inputArtist, inputSong, displayLyrics, analyze) {
+  clearSearch();
+  $("#lyrics").append(`<h2>${inputArtist} - ${inputSong}</h2>`);
+  $("#lyrics").append("<h4>Lyrics:</h4><p>" + displayLyrics + "</p>");
+  $("#analysis").append("Word Count: " + analyze.wordArray.length);
+  $("#analysis").append(analyze.wordCountSet);
 }
 
-let displayError = function() {
+let displayError = function(error) {
+  clearSearch();
+  $("#errors").text(`There was an error processing your request: ${error} No lyrics found. Please try again.`)
+}
+
+let clearSearch = function() {
   $("#lyrics").empty();
-  $("#errors").text(`There was an error processing your request: No lyrics found. Please try again.`)
+  $("#errors").empty();
+  $("#analysis").empty();
 }
 
 $(document).ready(function() {
   $("#button").click(function(){
-    let lyrics = new Lyrics();
-    let inputArtist = $("#artist").val();
-    let inputSong = $("#song").val();
-    lyrics.apiCall(inputArtist, inputSong, displayData, displayError);
+    let lyricsSearch = new Lyrics();
+    let inputArtist = $("#artist").val().toUpperCase();
+    let inputSong = $("#song").val().toUpperCase();
+    lyricsSearch.apiCall(inputArtist, inputSong).then(function(response) {
+      let result = JSON.parse(response);
+      let displayLyrics = result.lyrics.toString().replace(/\r\n|\n|\r/g, '<br>');
+      let analyze = new AnalyzeLyrics(result.lyrics);
+      analyze.wordCount();
+      displayData(inputArtist, inputSong, displayLyrics, analyze);
+    }, function(error) {
+      displayError(error);
+    });
   });
 });
